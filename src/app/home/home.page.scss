@@ -1,0 +1,34 @@
+// ion-img {
+//   max-width: 100%;
+//   height: auto;
+// }
+
+@media only screen and (min-width: 100px) {
+  ion-img {
+    width: 50%;
+    height: 50%;
+    margin: 0 auto;
+  }
+}
+
+// .transparent-card {
+//   background-color: transparent;
+// }
+
+@media (max-width: 599px) {
+  ion-card-title {
+      font-size: 17px;
+      font-weight: bold;
+  }
+}
+
+
+// ion-toolbar {
+//   --background: #00264D;
+
+// }
+
+// ion-menu {
+//   --background: #00264D;
+// }
+

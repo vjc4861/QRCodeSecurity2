@@ -1,0 +1,37 @@
+<ion-app>
+  <ion-menu  class="psot-login-menu" side="start" menuId="post-login" contentId="main" >
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>CVG</ion-title>
+
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+
+      <ion-list>
+        <ion-menu-toggle>
+        <ion-item lines="none" routerLink="/profile">
+          <ion-icon></ion-icon>
+          <ion-label>Profile</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+        <ion-item lines="none" routerLink="/qr-generator">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label> QR Code Generator</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+        <ion-item lines="none" (click)="onLogout()" button>
+          <ion-icon name="log-out-outline"> </ion-icon>
+          <ion-label>Log out</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+      </ion-list>
+    </ion-content>
+
+  </ion-menu>
+  <ion-router-outlet id="main"></ion-router-outlet>
+</ion-app>

@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+      <ion-title>{{ isLogin ? 'Login' : 'Register' }}</ion-title>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input type="email" ngModel name="email" required email #emailCtrl="ngModel"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none"><p>Please enter a vaid email address </p></ion-item>
+            <ion-item>
+              <ion-label position="floating">Password</ion-label>
+              <ion-input type="password" ngModel name="password" required minlength="8" #pwdCtrl="ngModel"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!pwdCtrl.valid && pwdCtrl.touched" lines="none"><p>Please enter a vaid password with min. 8 characters</p></ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <!-- <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner> -->
+          <ion-button type="button" color="primary" fill="clear" expand="block" (click)="onChangeAuthMode()"> Click here to {{ isLogin ? 'Register' : 'Login' }}</ion-button>
+          <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">Login</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
