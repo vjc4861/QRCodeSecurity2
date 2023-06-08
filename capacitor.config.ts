@@ -7,6 +7,9 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: 'https'
   }
+  // "server": {
+  //   "url": "http://YOUR_COMPUTER_IP_ADDRESS:8100"
+  // },
 };
 
 export default config;

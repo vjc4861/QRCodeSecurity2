@@ -12,6 +12,7 @@
       [formats]="[qrcodeFormat]"
       [torch]="true"
       (scanSuccess)="onScanSuccess($event)"
+      (camerasFound)="onCamerasFound($event)"
     ></zxing-scanner>
     <div class="scanner-mask"></div>
     <div class="scanner-overlay"></div>

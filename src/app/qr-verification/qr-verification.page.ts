@@ -39,6 +39,9 @@ export class QrVerificationPage implements OnInit {
     });
   }
   
+  onCamerasFound(availableDevices: MediaDeviceInfo[]) {
+    console.log('Available cameras:', availableDevices);
+  }
   
 
   onScanSuccess(data: any) {
