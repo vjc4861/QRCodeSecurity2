@@ -31,7 +31,11 @@
         <ion-col size-sm="6" offset-sm="3">
           <!-- <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner> -->
           <ion-button type="button" color="primary" fill="clear" expand="block" (click)="onChangeAuthMode()"> Click here to {{ isLogin ? 'Register' : 'Login' }}</ion-button>
-          <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">Login</ion-button>
+          <ion-button type="submit" color="primary" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">{{ isLogin ? 'Login' : 'Register' }}</ion-button>
+
+          <!-- The commented line below has the onLogin function -->
+          <!-- <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">Login</ion-button> -->
+          
         </ion-col>
       </ion-row>
     </ion-grid>

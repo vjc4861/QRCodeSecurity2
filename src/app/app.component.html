@@ -12,25 +12,25 @@
       <ion-list>
         <ion-menu-toggle>
         <ion-item lines="none" routerLink="/profile">
-          <ion-icon></ion-icon>
+          <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
           <ion-label>Profile</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
-        <ion-item lines="none" routerLink="/qr-generator">
-          <ion-icon name="qr-code-outline"></ion-icon>
-          <ion-label> QR Code Generator</ion-label>
+        <ion-item lines="none" routerLink="/qr-generator">          
+          <ion-icon name="qr-code-outline" class="custom-icon"></ion-icon>          
+          <ion-label>  QR Code Generator</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
         <ion-item lines="none" routerLink="/qr-verification">
-          <ion-icon name="qr-code-outline"></ion-icon>
-          <ion-label> QR Verify</ion-label>
+          <ion-icon name="scan-outline" class="custom-icon"></ion-icon>
+          <ion-label>  QR Verify</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>
         <ion-item lines="none" (click)="onLogout()" button>
-          <ion-icon name="log-out-outline"> </ion-icon>
+          <ion-icon name="log-out-outline" class="custom-icon"> </ion-icon>
           <ion-label>Log out</ion-label>
         </ion-item>
       </ion-menu-toggle>
