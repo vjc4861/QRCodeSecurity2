@@ -13,7 +13,7 @@ export class AppComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogout(){
-    this.authService.logout()
+    // this.authService.logout()
     this.router.navigateByUrl('/tabs/login');
   }
 }

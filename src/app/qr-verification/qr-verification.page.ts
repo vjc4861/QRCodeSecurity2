@@ -55,11 +55,11 @@ export class QrVerificationPage implements OnInit {
       if (snapshot.exists()) {
         // If found in the database
         alertHeader = '✅ Success';
-        alertMessage = `${data}<br><br>It is in our database as it was generated with our app!`;
+        alertMessage = `Content: ${data}. It is in our database as it was generated with our app!`;
       } else {
         // If not found in the database
         alertHeader = '❌ Warning';
-        alertMessage = `${data}<br><br>It is not in our database, therefore it was not created using our app.`;
+        alertMessage = `Content: ${data}. It is not in our database, therefore it was not created using our app.`;
       }
   
       // Show alert message based on the result

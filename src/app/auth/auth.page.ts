@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
-import { AuthService } from './auth.service';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { AuthResponseData, AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -14,21 +15,44 @@ export class AuthPage implements OnInit {
   isLoading = false;
   isLogin = true;
 
-  constructor(private authService: AuthService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(private authService: AuthService, private alertCtrl: AlertController ,private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
   }
 
-  onLogin() {
+  onLogin(email: string, password: string) {
     this.isLoading = true;
-    this.authService.login();
+    // this.authService.login();
     this.loadingCtrl.create({keyboardClose: true, message: 'Logging in....'}).then(loadingEl => {
       loadingEl.present();
-      setTimeout(() => {
+      let authObserve: Observable<AuthResponseData>;
+      if (this.isLogin) {
+        authObserve = this.authService.login(email, password);
+      } else {
+        authObserve = this.authService.signup(email, password);
+      }
+      // send a request to signup servers
+      authObserve.subscribe(
+        (responseData) => {
+        console.log(responseData);
+        console.log('User ID:', responseData.localId);
         this.isLoading = false;
         loadingEl.dismiss();
         this.router.navigateByUrl('/profile')
-      }, 1500);
+      }, respondedError => {
+            this.isLoading = false;
+            loadingEl.dismiss();
+            const code = respondedError.error.error.message;
+            let message = 'Unsuccessful registration, please try again!';
+            if (code === 'EMAIL_EXISTS'){
+              message = 'This email address already exists!';
+            } else if (code === 'EMAIL_NOT_FOUND') {
+              message = 'Invalid email address / password. Please try again!';
+            } else if (code === 'INVALID_PASSWORD') {
+              message = 'Invalid email address / password. Please try again!';
+            }
+            this.displayAlert(message);
+      });
     });
 
 
@@ -39,27 +63,21 @@ export class AuthPage implements OnInit {
   }
 
   onSubmit(form: NgForm){
+    console.log('Form submitted');
     if (!form.valid){
       return
     }
     const email = form.value.email;
     const password = form.value.password;
     // console.log(email, pwd);
+    this.onLogin(email, password);
+  }
 
-    if (this.isLogin) {
-      // send a request login servers with email and password
-    }
-    else {
-      // send a request to signup servers
-      this.authService.signup(email, password).subscribe(
-        (responseData) => {
-        console.log(responseData);
-      },
-      (error) => {
-        console.log(error.error);
-      }
-      );
-    }
+  private displayAlert(message: string){
+    console.log('Displaying alert with message:', message);
+    this.alertCtrl.create({ header: 'Login Failed', message: message, buttons: ['Okay']}).then(alertElement => alertElement.present());
+
+
   }
 
 

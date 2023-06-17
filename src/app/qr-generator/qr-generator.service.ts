@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { qrCode_model } from './qr-generator.model';
 import { QRCodeErrorCorrectionLevel } from "qrcode";
 import { AuthService } from '../auth/auth.service';
-import { BehaviorSubject, take, map, tap, delay, Observable, from, catchError, of, switchMap, Subject, filter } from 'rxjs';
+import { BehaviorSubject, take, map, tap, delay, Observable, from, catchError, of, switchMap, Subject, filter, throwError } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -48,34 +48,64 @@ export class QrGeneratorService {
     console.log("work ")
     this.fetchDatafromDb()}
 
-    fetchDatafromDb(): Observable<any> {
-      return this.db.object('qrcodes').valueChanges().pipe(map((data: any) => {
-        console.log("This fetch function is working")
-        console.log(JSON.stringify(data))
-        const qrcodes: qrCode_model[] = [];
-        for(let key in data){
-          const qruuid = data[key].qruuid;
-          const qrTitle = data[key].title;
-          const qrData = data[key].data;
-          const width = data[key].width;
-          const errorCorrectionLevel = data[key].errorCorrectionLevel;
-          console.log(qrTitle);
     
-          const newQrCode = new qrCode_model(qruuid, Math.random().toString(), qrTitle, qrData, width, errorCorrectionLevel, this.authService.userId);
-          qrcodes.push(newQrCode);
-        }
-        return qrcodes;
-      }));
+
+    fetchDatafromDb(): Observable<any> {
+      return this.authService.userId.pipe(
+        switchMap((userId) => {
+          if (userId) {
+            return this.db
+              .object('qrcodes')
+              .valueChanges()
+              .pipe(
+                map((data: any) => {
+                  console.log("This fetch function is working");
+                  console.log(JSON.stringify(data));
+                  const qrcodes: qrCode_model[] = [];
+                  for (let key in data) {
+                    const qruuid = data[key].qruuid;
+                    const qrTitle = data[key].title;
+                    const qrData = data[key].data;
+                    const width = data[key].width;
+                    const errorCorrectionLevel = data[key].errorCorrectionLevel;
+                    console.log(qrTitle);
+            
+                    const newQrCode = new qrCode_model(
+                      qruuid,
+                      Math.random().toString(),
+                      qrTitle,
+                      qrData,
+                      width,
+                      errorCorrectionLevel,
+                      userId
+                    );
+                    qrcodes.push(newQrCode);
+                  }
+                  return qrcodes;
+                })
+              );
+          } else {
+            return throwError('User not logged in');
+          }
+        })
+      );
     }
 
-  fetchQrcode(uuid: string, qrTitle:string, qrData:string, width:number, errorCorrectionLevel:QRCodeErrorCorrectionLevel ){
-    const newQrCode = new qrCode_model(uuid, Math.random().toString(), qrTitle, qrData, width, errorCorrectionLevel,this.authService.userId);
-    // this._qrcode.push(newQrCode)
-    return this._qrcodes.pipe(take(1), tap(qrcodes => {
-        this._qrcodes.next(qrcodes.concat(newQrCode));
-    })).subscribe();
+    fetchQrcode(uuid: string, qrTitle: string, qrData: string, width: number, errorCorrectionLevel: QRCodeErrorCorrectionLevel) {
+      this.authService.userId.pipe(take(1)).subscribe(userId => {
+        if (userId === null) {
+          console.warn('User ID is null; cannot fetch QR code');
+          return;
+        }
     
-  }
+        const newQrCode = new qrCode_model(uuid, Math.random().toString(), qrTitle, qrData, width, errorCorrectionLevel, userId);
+        this._qrcodes.pipe(take(1), tap(qrcodes => {
+          this._qrcodes.next(qrcodes.concat(newQrCode));
+        })).subscribe();
+      });
+    }
+
+  
 
   deleteQrCode(qrcodeId: string) {
     return this._qrcodes.pipe(take(1), tap(qrcodes => {
@@ -141,7 +171,35 @@ export class QrGeneratorService {
 
 }
 
+// Old working codes of fetchQrcode() and fetchDatafromDb()
 
+// fetchDatafromDb(): Observable<any> {
+    //   return this.db.object('qrcodes').valueChanges().pipe(map((data: any) => {
+    //     console.log("This fetch function is working")
+    //     console.log(JSON.stringify(data))
+    //     const qrcodes: qrCode_model[] = [];
+    //     for(let key in data){
+    //       const qruuid = data[key].qruuid;
+    //       const qrTitle = data[key].title;
+    //       const qrData = data[key].data;
+    //       const width = data[key].width;
+    //       const errorCorrectionLevel = data[key].errorCorrectionLevel;
+    //       console.log(qrTitle);
+    
+    //       const newQrCode = new qrCode_model(qruuid, Math.random().toString(), qrTitle, qrData, width, errorCorrectionLevel, this.authService.userId);
+    //       qrcodes.push(newQrCode);
+    //     }
+    //     return qrcodes;
+    //   }));
+    // }
+// fetchQrcode(uuid: string, qrTitle:string, qrData:string, width:number, errorCorrectionLevel:QRCodeErrorCorrectionLevel ){
+  //   const newQrCode = new qrCode_model(uuid, Math.random().toString(), qrTitle, qrData, width, errorCorrectionLevel,this.authService.userId);
+  //   // this._qrcode.push(newQrCode)
+  //   return this._qrcodes.pipe(take(1), tap(qrcodes => {
+  //       this._qrcodes.next(qrcodes.concat(newQrCode));
+  //   })).subscribe();
+    
+  // }
 
 
 //Old onCancelMethod() active until 05/08/2023
