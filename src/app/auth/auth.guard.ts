@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
-import { Observable, take, tap } from 'rxjs';
+import { Observable, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanLoad {
-
   constructor(private authService: AuthService, private router: Router) {}
   // canActivate(
   //   route: ActivatedRouteSnapshot,
@@ -34,12 +33,25 @@ export class AuthGuard implements CanLoad {
   canLoad(
     route: Route,
     segments: UrlSegment[]
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      
-    return this.authService.userisAuthenticated.pipe(take(1), tap(isAuthenticated => {
-      if (!isAuthenticated){
-        this.router.navigateByUrl('/tabs/login');
-      }
-    }));
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.authService.userisAuthenticated.pipe(
+      take(1),
+      switchMap(isAuthenticated => {
+        if(!isAuthenticated) {
+          return this.authService.logingInAuto();
+        } else {
+          return of(isAuthenticated);
+        }
+      }),
+      tap((isAuthenticated) => {
+        if (!isAuthenticated) {
+          this.router.navigateByUrl('/tabs/login');
+        }
+      })
+    );
   }
 }

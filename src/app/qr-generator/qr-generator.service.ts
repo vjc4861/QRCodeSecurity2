@@ -52,6 +52,7 @@ export class QrGeneratorService {
 
     fetchDatafromDb(): Observable<any> {
       return this.authService.userId.pipe(
+        take(1),
         switchMap((userId) => {
           if (userId) {
             return this.db
