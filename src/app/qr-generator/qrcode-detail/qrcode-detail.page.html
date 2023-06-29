@@ -21,7 +21,7 @@
             <p>QR Code Data : {{ qrcode?.qrData }}</p>
             <p>Width : {{ qrcode?.width }}</p>
             <p>Error Correction Level : {{ qrcode?.errorCorrectionLevel }}</p>
-            <qrcode [qrdata]="qrcode?.qrData ?? ''" [width]="qrcode?.width ?? 256" [errorCorrectionLevel]="qrcode?.errorCorrectionLevel ?? 'M'"></qrcode>
+            <qrcode [allowEmptyString]="true" [qrdata]="qrcode?.qrData ?? ''" [width]="qrcode?.width ?? 256" [errorCorrectionLevel]="qrcode?.errorCorrectionLevel ?? 'M'"></qrcode>
           </ion-card-content>
         </ion-card>
       </ion-col>

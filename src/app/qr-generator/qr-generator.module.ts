@@ -14,9 +14,6 @@ import { CreateQrcodeComponent } from './create-qrcode/create-qrcode.component';
 
 
 
-
-
-
 @NgModule({
   imports: [
     CommonModule,

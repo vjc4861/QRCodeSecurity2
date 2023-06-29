@@ -51,20 +51,24 @@ export class QrVerificationPage implements OnInit {
     this.db.database.ref('qrcodes').orderByChild('data').equalTo(data).once('value', async snapshot => {
       let alertHeader = '';
       let alertMessage = '';
+      let alertSubHeader = '';
       
       if (snapshot.exists()) {
         // If found in the database
         alertHeader = '✅ Success';
-        alertMessage = `Content: ${data}. It is in our database as it was generated with our app!`;
+        alertSubHeader = `Content: ${data}`;
+        alertMessage = `It is in our database as it was generated with our app!`;
       } else {
         // If not found in the database
         alertHeader = '❌ Warning';
-        alertMessage = `Content: ${data}. It is not in our database, therefore it was not created using our app.`;
+        alertSubHeader = `Content: ${data}`;
+        alertMessage = `It is not in our database, therefore it was not created using our app!`;
       }
   
       // Show alert message based on the result
       const alert = await this.alertController.create({
         header: alertHeader,
+        subHeader: alertSubHeader,
         message: alertMessage,
         buttons: [{
           text: 'OK',

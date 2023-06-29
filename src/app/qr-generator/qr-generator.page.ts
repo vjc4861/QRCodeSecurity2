@@ -24,7 +24,7 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
   private qrcodesSub!: Subscription;
   deletedQrCodeSub: any;
 
-  constructor(private qrGeneratorService: QrGeneratorService, private cd: ChangeDetectorRef, private loadingCtrl: LoadingController, private modalCtrl: ModalController) {}
+  constructor(private changeDetectorRef: ChangeDetectorRef,  private qrGeneratorService: QrGeneratorService, private cd: ChangeDetectorRef, private loadingCtrl: LoadingController, private modalCtrl: ModalController) {}
   
   // ngOnInit(): void {
   //   // throw new Error('Method not implemented.');
@@ -40,6 +40,7 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
   fetchQRCodes() {
     // Replace the following with the correct method and parameters to fetch the relevant QR codes
     this.qrGeneratorService.fetchDatafromDb().subscribe(loadedQRCode => {
+      console.log('Fetched loaded QR codes:', loadedQRCode);
       this.loadedQr = loadedQRCode;
       console.log(this.loadedQr);
     });
@@ -47,6 +48,7 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.fetchQRCodes();
+    this.changeDetectorRef.detectChanges();
     const qrcodes = await this.qrGeneratorService.fetchDatafromDb().pipe(take(1)).toPromise();
     this.qrGeneratorService._qrcodes.next(qrcodes);
     this.loadedQr = qrcodes;
@@ -63,6 +65,32 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
       }
     });
   }
+
+  // async ngOnInit() {
+  //   const storedQr = localStorage.getItem('loadedQr');
+  //   if (storedQr) {
+  //     this.loadedQr = JSON.parse(storedQr);
+  //   } 
+
+  //     this.qrGeneratorService._qrcodes.next(this.loadedQr);
+  //     this.fetchQRCodes();
+    
+
+  //   this.qrGeneratorService._qrcodes.next(this.loadedQr);
+
+  //   this.qrcodesSub = this.qrGeneratorService.qrcodes.subscribe(qrcodes => {
+  //     this.loadedQr = qrcodes;
+  //   });
+
+  //   this.deletedQrCodeSub = this.qrGeneratorService.qrCodeDeleted$.subscribe(deletedId => {
+  //     console.log('Deleted ID:', deletedId);
+  //     if (deletedId) {
+  //       this.loadedQr = [...this.loadedQr.filter(qr => qr.qid !== deletedId)];
+  //       this.cd.detectChanges();
+  //     }
+  //   });
+  // }
+
 
   ngOnDestroy() {
     if (this.qrcodesSub) {
@@ -89,7 +117,7 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
       this.qrGeneratorService.cancelQrcode(qrcodeId).subscribe(() => {
         this.loadedQr = this.loadedQr.filter(qr => qr.qruuid !== qrcodeId);
         loadingEl.dismiss().then(() => {
-          // this.fetchQRCodes();
+          this.fetchQRCodes();
         });
       });
     });

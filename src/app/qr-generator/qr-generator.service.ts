@@ -17,6 +17,7 @@ export class QrGeneratorService {
   public _qrcodes = new BehaviorSubject<qrCode_model[]>([ ]) ; 
   private deletedQrCodeId = new BehaviorSubject<string | null>(null);
   qrCodeDeleted$ = this.deletedQrCodeId.asObservable(); 
+  userId: any;
 
   
 
@@ -32,11 +33,24 @@ export class QrGeneratorService {
     
   }
 
-  addingQrCode(qrCode: qrCode_model){
-    return this._qrcodes.pipe(take(1), tap(qrcodes => {
-      this._qrcodes.next(qrcodes.concat(qrCode));
-    })).subscribe();
+  addingQrCode(qrCode: qrCode_model) {
+    this._qrcodes.pipe(take(1)).subscribe(qrcodes => {
+      this._qrcodes.next([...qrcodes, qrCode]);
+    });
   }
+
+  // addingQrCode(qrCode: qrCode_model) {
+  //   return this._qrcodes.pipe(take(1), tap(qrcodes => {
+  //     this._qrcodes.next(qrcodes.concat(qrCode));
+  //     localStorage.setItem('loadedQr', JSON.stringify(qrcodes.concat(qrCode)));
+  //   })).subscribe();
+  // }
+  
+  // addingQrCode(qrCode: qrCode_model){
+  //   return this._qrcodes.pipe(take(1), tap(qrcodes => {
+  //     this._qrcodes.next(qrcodes.concat(qrCode));
+  //   })).subscribe();
+  // }
 
   // qrCodeDeleted$ = this.deletedQrCodeId.pipe(
   //   filter(id => !!id)
@@ -45,9 +59,64 @@ export class QrGeneratorService {
   
 
   constructor(private loadingEl:LoadingController  ,public authService: AuthService,  private db: AngularFireDatabase, private db2: AngularFirestore) { 
-    console.log("work ")
-    this.fetchDatafromDb()}
+    // console.log("work ")
+    // this.fetchDatafromDb()
+    this.authService.userisAuthenticated.subscribe(isAuth => {
+      if (!isAuth) {
+        console.log("User is not authenticated!");
+      } else {
+        this.userId = this.userId;
+        this.fetchDatafromDb().subscribe(qrcodes => {
+          this._qrcodes.next(qrcodes);
+        });
+      }
+    });
+  
+  }
 
+    // fetchDatafromDb(): Observable<any> {
+    //   console.log('fetchDatafromDb called');
+    //   return this.authService.userId.pipe(
+    //     take(1),
+    //     switchMap((userId) => {
+    //       if (userId) {
+    //         // return this.db.list('qrcodes').valueChanges().pipe(
+    //           return this.db.list('qrcodes', ref => ref.orderByChild('userId').equalTo(userId)).valueChanges().pipe(
+    //           map((data: any) => {
+    //             console.log("This fetch function is working");
+    //             console.log(JSON.stringify(data));
+    //             const qrcodes: qrCode_model[] = [];
+    //             for (let key in data) {
+    //                 const qruuid = data[key].qruuid;
+    //                 const qrUserId = data[key].userId;
+    //                 // Check if user ID matches the current user ID
+    //                 if (qrUserId === userId) {
+    //                   const qrTitle = data[key].title;
+    //                   const qrData = data[key].data;
+    //                   const width = data[key].width;
+    //                   const errorCorrectionLevel = data[key].errorCorrectionLevel;
+                      
+    //                   const newQrCode = new qrCode_model(
+    //                     qruuid,
+    //                     Math.random().toString(),
+    //                     qrTitle,
+    //                     qrData,
+    //                     width,
+    //                     errorCorrectionLevel,
+    //                     userId
+    //                   );
+    //                   qrcodes.push(newQrCode);
+    //                 }
+    //             }
+    //             return qrcodes;
+    //           })
+    //         );
+    //       } else {
+    //         return throwError('User not logged in');
+    //       }
+    //     })
+    //   );
+    // }
     
 
     fetchDatafromDb(): Observable<any> {
@@ -56,7 +125,8 @@ export class QrGeneratorService {
         switchMap((userId) => {
           if (userId) {
             return this.db
-              .object('qrcodes')
+              .list('qrcodes', (ref) => ref.orderByChild('userId').equalTo(userId))
+              // .object('qrcodes')
               .valueChanges()
               .pipe(
                 map((data: any) => {
@@ -64,24 +134,27 @@ export class QrGeneratorService {
                   console.log(JSON.stringify(data));
                   const qrcodes: qrCode_model[] = [];
                   for (let key in data) {
-                    const qruuid = data[key].qruuid;
-                    const qrTitle = data[key].title;
-                    const qrData = data[key].data;
-                    const width = data[key].width;
-                    const errorCorrectionLevel = data[key].errorCorrectionLevel;
-                    console.log(qrTitle);
-            
-                    const newQrCode = new qrCode_model(
-                      qruuid,
-                      Math.random().toString(),
-                      qrTitle,
-                      qrData,
-                      width,
-                      errorCorrectionLevel,
-                      userId
-                    );
-                    qrcodes.push(newQrCode);
-                  }
+                      const qruuid = data[key].qruuid;
+                    // if (qruuid === userId) {
+                      const qrTitle = data[key].title;
+                      const qrData = data[key].data;
+                      const width = data[key].width;
+                      const errorCorrectionLevel = data[key].errorCorrectionLevel;
+                      const qrUserId = data[key].userId;
+                      console.log(qrTitle);
+                      
+                      const newQrCode = new qrCode_model(
+                        qruuid,
+                        Math.random().toString(),
+                        qrTitle,
+                        qrData,
+                        width,
+                        errorCorrectionLevel,
+                        userId
+                      );
+                      qrcodes.push(newQrCode);
+                    // }
+                }
                   return qrcodes;
                 })
               );
@@ -131,13 +204,14 @@ export class QrGeneratorService {
             this.db.object(path + '/' + key).remove().then(() => {
               this._qrcodes.pipe(take(1), tap(qrcodes => {
                 this._qrcodes.next(qrcodes.filter(qr => qr.qruuid !== qrcodeId));
+                localStorage.setItem('loadedQr', JSON.stringify(qrcodes.filter(qr => qr.qruuid !== qrcodeId)));
               })).subscribe();
             });
-  
+
             setTimeout(() => {
               this.loadingEl.dismiss()
             }, 500);
-  
+
             return of<void>();
           }
         }

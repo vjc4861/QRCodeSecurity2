@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
+import { QrCodeFetcherGuard } from './qr-generator/qr-code-fetcher.guard';
+import { QrcodeDetailPage } from './qr-generator/qrcode-detail/qrcode-detail.page';
+
 
 
 const routes: Routes = [
@@ -37,6 +40,11 @@ const routes: Routes = [
   {
     path: 'qr-verification',
     loadChildren: () => import('./qr-verification/qr-verification.module').then( m => m.QrVerificationPageModule)
+  },
+  {
+    path: 'qr-code-list',
+    resolve: { qrcodes: QrCodeFetcherGuard },
+    loadChildren: () => import('./qr-generator/qr-generator.module').then(m => m.QrGeneratorPageModule)
   },
   
 ];

@@ -95,16 +95,7 @@ export class CreateQrcodeComponent implements OnInit {
                 userId: userId
               })
               .then(() => {
-                const newQrCode = new qrCode_model(
-                  this.uuid,
-                  Math.random().toString(),
-                  this.qrTitle,
-                  this.qrData,
-                  this.width,
-                  this.errorCorrectionLevel,
-                  userId
-                );
-                this.qrgeneratorService.addingQrCode(newQrCode);
+                
                 loadingEl.dismiss();
                 form.reset();
                 // this.router.navigate(['qr-generator']);
@@ -157,6 +148,61 @@ export class CreateQrcodeComponent implements OnInit {
   //   this.qrData = "";
   //   this.modalCtrl.dismiss(null, 'cancel');
     
+  // }
+
+
+
+  // Latest working storeData 20230626
+  // storeData(form: NgForm) {
+  //   this.loaderCtrl
+  //     .create({
+  //       message: 'Storing data.....',
+  //     })
+  //     .then((loadingEl) => {
+  //       loadingEl.present();
+  //       this.qrgeneratorService.authService.userId
+  //         .pipe(take(1))
+  //         .subscribe((userId) => {
+  //           if (!userId) {
+  //             // If userId is null or undefined, you can either set a default value or display an error message.
+            
+  //             // Option 1: Dismiss the modal and display an error message.
+  //             this.modalCtrl.dismiss();
+  //             this.presentAlert('An error occurred', 'User ID is not available. Please sign in again.');
+  //             return;
+            
+  //             // Option 2: Set a default value for userId.
+  //             //userId = 'default-user-id';
+  //             //continue with your other code
+  //           }
+  //           this.db
+  //             .list('qrcodes')
+  //             .push({
+  //               qruuid: this.uuid,
+  //               title: this.qrTitle,
+  //               data: this.qrData,
+  //               width: this.width,
+  //               errorCorrectionLevel: this.errorCorrectionLevel,
+  //               userId: userId
+  //             })
+  //             .then(() => {
+  //               const newQrCode = new qrCode_model(
+  //                 this.uuid,
+  //                 Math.random().toString(),
+  //                 this.qrTitle,
+  //                 this.qrData,
+  //                 this.width,
+  //                 this.errorCorrectionLevel,
+  //                 userId
+  //               );
+  //               this.qrgeneratorService.addingQrCode(newQrCode);
+  //               loadingEl.dismiss();
+  //               form.reset();
+  //               // this.router.navigate(['qr-generator']);
+  //               this.modalCtrl.dismiss(null, 'cancel');
+  //             });
+  //         });
+  //     });
   // }
 
 }
