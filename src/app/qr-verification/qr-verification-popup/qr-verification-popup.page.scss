@@ -1,0 +1,14 @@
+ion-content {
+    --background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .verificationModal {
+    width: 90%; /* Or whatever width you desire */
+    height: 70%; /* Or whatever height you desire */
+    background: white;
+    border-radius: 5px;
+  }
+  

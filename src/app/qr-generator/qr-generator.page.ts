@@ -9,6 +9,8 @@ import { QrGeneratorService } from './qr-generator.service';
 
 
 
+
+
 @Component({
   selector: 'app-qr-generator',
   templateUrl: 'qr-generator.page.html',
@@ -36,6 +38,10 @@ export class QrGeneratorPage implements OnInit, OnDestroy {
   //   });
     
   // }
+
+
+  
+
 
   fetchQRCodes() {
     // Replace the following with the correct method and parameters to fetch the relevant QR codes

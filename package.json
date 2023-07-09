@@ -34,6 +34,7 @@
     "@ionic/pwa-elements": "^3.1.1",
     "@zxing/ngx-scanner": "^16.0.0",
     "angularx-qrcode": "^16.0.0",
+    "axios": "^1.4.0",
     "firebase": "^9.22.1",
     "globalthis": "^1.0.3",
     "ionicons": "^7.0.0",

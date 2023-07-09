@@ -8,6 +8,8 @@ import { QrVerificationPageRoutingModule } from './qr-verification-routing.modul
 
 import { QrVerificationPage } from './qr-verification.page';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+// import { QrVerificationPopupPageModule } from './qr-verification-popup/qr-verification-popup.module';
+import { QrVerificationPopupPage } from './qr-verification-popup/qr-verification-popup.page';
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     QrVerificationPageRoutingModule,
     ZXingScannerModule
   ],
-  declarations: [QrVerificationPage]
+  declarations: [QrVerificationPage],
+  
 })
 export class QrVerificationPageModule {
 

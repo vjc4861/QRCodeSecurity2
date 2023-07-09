@@ -46,6 +46,10 @@ const routes: Routes = [
     resolve: { qrcodes: QrCodeFetcherGuard },
     loadChildren: () => import('./qr-generator/qr-generator.module').then(m => m.QrGeneratorPageModule)
   },
+  {
+    path: 'qr-verification-popup',
+    loadChildren: () => import('./qr-verification/qr-verification-popup/qr-verification-popup.module').then( m => m.QrVerificationPopupPageModule)
+  },
   
 ];
 @NgModule({

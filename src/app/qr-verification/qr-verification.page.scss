@@ -33,4 +33,9 @@
     z-index: 3;
   }
   
+  .alert-message::before {
+    content: "\A \A";
+    white-space: pre-wrap;
+  }
+  
   

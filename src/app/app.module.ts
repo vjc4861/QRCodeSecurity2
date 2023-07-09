@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 
+
 // import { QrCodeErrorCorrectionLevel } ;
 
 @NgModule({
