@@ -1,0 +1,17 @@
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+.resized-image {
+width: 100%;
+max-width: 50%;  /* Adjust as needed */
+height: auto;
+}
+
+.smaller-button {
+max-width: 70%;  /* Adjust as needed */
+margin: auto;
+}
+  

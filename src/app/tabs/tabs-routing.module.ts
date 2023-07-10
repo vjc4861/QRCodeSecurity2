@@ -16,6 +16,10 @@ const routes: Routes = [
         path: 'contact-us',
         loadChildren: () => import('../contact-us/contact-us.module').then(m => m.ContactUsPageModule)
       },
+      {
+        path: 'qr-verify',
+        loadChildren: () => import('../qr-verification/qr-verification.module').then(m => m.QrVerificationPageModule)
+      },
       // {
       //   path: 'tab3',
       //   loadChildren: () => import('../login/login.module').then(m => m.LoginPageModule)
@@ -26,14 +30,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/home',
+        redirectTo: '/tabs/login',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/home',
+    redirectTo: '/tabs/login',
     pathMatch: 'full'
   }
 ];

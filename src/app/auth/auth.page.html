@@ -12,7 +12,12 @@
   <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
+        <ion-col size-sm="6" offset-sm="3" class="image-container">
+          <ion-img src="..\assets\CVG_QRCodeSecurity_Logo_MASTER_Rev.png" alt="image" class="resized-image"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3" class="image-container">
           <ion-list>
             <ion-item>
               <ion-label position="floating">Email</ion-label>
@@ -30,8 +35,9 @@
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <!-- <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner> -->
+          
+          <ion-button type="submit" color="primary" class="smaller-button" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">{{ isLogin ? 'Login' : 'Register' }}</ion-button>
           <ion-button type="button" color="primary" fill="clear" expand="block" (click)="onChangeAuthMode()"> Click here to {{ isLogin ? 'Register' : 'Login' }}</ion-button>
-          <ion-button type="submit" color="primary" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">{{ isLogin ? 'Login' : 'Register' }}</ion-button>
 
           <!-- The commented line below has the onLogin function -->
           <!-- <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">Login</ion-button> -->
