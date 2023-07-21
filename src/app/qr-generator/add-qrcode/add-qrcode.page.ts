@@ -35,7 +35,7 @@ export class AddQrcodePage implements OnInit {
     console.log("QR Code is Generated")
   }
 
-  storeData(){
+  dataStorage(){
     console.log("QR code is stored in the database")
   }
 }

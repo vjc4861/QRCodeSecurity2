@@ -1,16 +1,16 @@
-.image-container {
+.containerImage {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-.resized-image {
+.imageIsResized {
 width: 100%;
 max-width: 50%;  /* Adjust as needed */
 height: auto;
 }
 
-.smaller-button {
+.buttonSmall {
 max-width: 70%;  /* Adjust as needed */
 margin: auto;
 }

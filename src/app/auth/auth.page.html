@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons>
-      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+      <!-- <ion-back-button defaultHref="/tabs/home"></ion-back-button> -->
       <ion-title>{{ isLogin ? 'Login' : 'Register' }}</ion-title>
     </ion-buttons>
 
@@ -9,15 +9,15 @@
 </ion-header>
 
 <ion-content padding>
-  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+  <form #authenForm="ngForm" (ngSubmit)="onSubmit(authenForm)">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3" class="image-container">
-          <ion-img src="..\assets\CVG_QRCodeSecurity_Logo_MASTER_Rev.png" alt="image" class="resized-image"></ion-img>
+        <ion-col size-sm="6" offset-sm="3" class="containerImage">
+          <ion-img src="..\assets\CVG_QRCodeSecurity_Logo_MASTER_Rev.png" alt="image" class="imageIsResized"></ion-img>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3" class="image-container">
+        <ion-col size-sm="6" offset-sm="3" class="containerImage">
           <ion-list>
             <ion-item>
               <ion-label position="floating">Email</ion-label>
@@ -34,13 +34,10 @@
       </ion-row>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
-          <!-- <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner> -->
           
-          <ion-button type="submit" color="primary" class="smaller-button" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">{{ isLogin ? 'Login' : 'Register' }}</ion-button>
-          <ion-button type="button" color="primary" fill="clear" expand="block" (click)="onChangeAuthMode()"> Click here to {{ isLogin ? 'Register' : 'Login' }}</ion-button>
-
-          <!-- The commented line below has the onLogin function -->
-          <!-- <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!authForm.valid" *ngIf="!isLoading">Login</ion-button> -->
+          
+          <ion-button type="submit" color="primary" class="buttonSmall" expand="block" [disabled]="!authenForm.valid" *ngIf="!isLoading">{{ isLogin ? 'Login' : 'Register' }}</ion-button>
+          <ion-button type="button" color="primary" fill="clear" expand="block" (click)="authenModeChange()"> Click here to {{ isLogin ? 'Register' : 'Login' }}</ion-button>
           
         </ion-col>
       </ion-row>

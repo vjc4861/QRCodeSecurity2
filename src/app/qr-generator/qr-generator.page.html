@@ -21,9 +21,6 @@
         <ion-list>
           <ion-item-sliding *ngFor="let qrcode of loadedQr" #slidingQrCode>
             <ion-item [routerLink]="['/', 'qr-generator', qrcode.qid]">
-            <!-- <ion-thumbnail slot="start"> -->
-              <!-- qr code goes in here  -->
-            <!-- </ion-thumbnail> -->
             <ion-label>
               <h2>{{ qrcode.qrTitle }}</h2>
             </ion-label>

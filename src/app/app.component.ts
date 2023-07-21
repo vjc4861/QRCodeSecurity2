@@ -13,19 +13,19 @@ import { Subscription } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy {
 
   private authenSub: Subscription | undefined;
-  private previousState = false;
+  private inPreviousState = false;
 
 
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authenService: AuthService, private router: Router) {}
   
   
   ngOnInit() {
-    this.authenSub =  this.authService.userisAuthenticated.subscribe(isAuthen => {
-      if (!isAuthen && this.previousState !== isAuthen){
+    this.authenSub =  this.authenService.userisAuthenticated.subscribe(isAuthen => {
+      if (!isAuthen && this.inPreviousState !== isAuthen){
         this.router.navigateByUrl('/tabs/login');
       }
-      this.previousState = isAuthen;
+      this.inPreviousState = isAuthen;
       
     });
   }
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onLogout(){
-    this.authService.logout()
+    this.authenService.logout()
     // this.router.navigateByUrl('/tabs/login');
   }
 }

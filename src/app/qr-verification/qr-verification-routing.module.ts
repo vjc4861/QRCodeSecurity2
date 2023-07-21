@@ -8,10 +8,6 @@ const routes: Routes = [
     path: '',
     component: QrVerificationPage
   },
-  // {
-  //   path: 'qr-verification-popup',
-  //   loadChildren: () => import('./qr-verification-popup/qr-verification-popup.module').then( m => m.QrVerificationPopupPageModule)
-  // }
 ];
 
 @NgModule({

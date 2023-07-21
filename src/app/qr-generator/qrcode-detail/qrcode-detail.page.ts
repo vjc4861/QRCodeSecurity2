@@ -1,15 +1,11 @@
 import { Component, Input, OnDestroy, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Subscription, take, throwError } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { qrCode_model } from '../qr-generator.model';
 import { QrGeneratorService } from '../qr-generator.service';
-import { QRCodeComponent } from 'angularx-qrcode';
-import { QRCodeErrorCorrectionLevel } from "qrcode";
-import { QRCodeModule } from 'angularx-qrcode';
 import { ImageServiceService } from 'src/app/image-service.service';
 import { LoadingController } from '@ionic/angular';
-import { catchError } from 'rxjs/operators';
 
 
 
@@ -22,14 +18,13 @@ export class QrcodeDetailPage implements OnInit, OnDestroy, OnChanges {
 
   @Input() qrcode?: qrCode_model;
   private qrSub!: Subscription;
-  // activatedRoute: any;
-  // activatedRoute: any;
+  
 
   
 
   constructor( private loadingController: LoadingController, private imageQrService: ImageServiceService ,private route: ActivatedRoute, private navCtrl: NavController, private qrcodeService: QrGeneratorService) { }
   
-// The NgOnInit is the most imp. This solves our refresh disappearace issue and data staying issue
+
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('qrcodeId')) {
@@ -56,26 +51,6 @@ export class QrcodeDetailPage implements OnInit, OnDestroy, OnChanges {
     });
   }
   
-  // IMP WORKING BELOW!!!!
-  // ngOnInit() {
-  //   this.route.paramMap.subscribe(paramMap => {
-  //     if (!paramMap.has('qrcodeId')) {
-  //       this.navCtrl.navigateBack('./qr-generator');
-  //       return;
-  //     }
-  //     this.qrSub = this.qrcodeService
-  //       .getQrcode(paramMap.get('qrcodeId'))
-  //       .subscribe(qrcode => {
-  //         this.qrcode = qrcode;
-  //         console.log(qrcode);
-  //       });
-  //   });
-  // }
-
-
-
-
-  
   ngOnChanges(changes: SimpleChanges) {
     // Only update when the prop changes
     if (changes['qrcode']) {
@@ -91,9 +66,6 @@ export class QrcodeDetailPage implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  // ionViewDidLeave() {
-  //   localStorage.removeItem('loadedQr');
-  // }
 
 
 }

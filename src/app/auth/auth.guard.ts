@@ -7,29 +7,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanLoad {
-  constructor(private authService: AuthService, private router: Router) {}
-  // canActivate(
-  //   route: ActivatedRouteSnapshot,
-  //   state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //   return true;
-  // }
-  // canActivateChild(
-  //   childRoute: ActivatedRouteSnapshot,
-  //   state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //   return true;
-  // }
-  // canDeactivate(
-  //   component: unknown,
-  //   currentRoute: ActivatedRouteSnapshot,
-  //   currentState: RouterStateSnapshot,
-  //   nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //   return true;
-  // }
-  // canMatch(
-  //   route: Route,
-  //   segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-  //   return true;
-  // }
+  constructor(private authenService: AuthService, private router: Router) {}
+  
   canLoad(
     route: Route,
     segments: UrlSegment[]
@@ -38,17 +17,17 @@ export class AuthGuard implements CanLoad {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authService.userisAuthenticated.pipe(
+    return this.authenService.userisAuthenticated.pipe(
       take(1),
-      switchMap(isAuthenticated => {
-        if(!isAuthenticated) {
-          return this.authService.logingInAuto();
+      switchMap(authenticatedYes => {
+        if(!authenticatedYes) {
+          return this.authenService.logingInAuto();
         } else {
-          return of(isAuthenticated);
+          return of(authenticatedYes);
         }
       }),
-      tap((isAuthenticated) => {
-        if (!isAuthenticated) {
+      tap((authenticatedYes) => {
+        if (!authenticatedYes) {
           this.router.navigateByUrl('/tabs/login');
         }
       })

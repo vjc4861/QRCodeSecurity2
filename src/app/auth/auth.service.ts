@@ -18,12 +18,11 @@ export interface AuthResponseData {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService  implements OnDestroy {
+export class AuthService implements OnDestroy {
   // private _userAuthenticated = false;
   // comment on the below and comment off above for production
   // private _userAuthenticated = true;
   private _userId = '';
-  // private _token = new BehaviorSubject<string>();
 
   private _user = new BehaviorSubject<User | null>(null);
   private logoutTimer: any;
@@ -52,25 +51,29 @@ export class AuthService  implements OnDestroy {
         );
         return user;
       }),
-      tap( user => {
+      tap((user) => {
         if (user) {
           this._user.next(user);
           this.logingOutAuto(user.tokenPeriod);
         }
       }),
-      map(user => {
+      map((user) => {
         return !!user;
       })
     );
   }
+
+
   private logingOutAuto(tokenPeriod: number) {
-    if (this.logoutTimer){
+    if (this.logoutTimer) {
       clearTimeout(this.logoutTimer);
     }
     this.logoutTimer = setTimeout(() => {
       this.logout();
     }, tokenPeriod);
   }
+
+
 
   get userisAuthenticated() {
     return this._user.asObservable().pipe(
@@ -86,6 +89,8 @@ export class AuthService  implements OnDestroy {
     // console.log(this._userId)
   }
 
+
+
   get userId() {
     return this._user.asObservable().pipe(
       map((user) => {
@@ -97,6 +102,8 @@ export class AuthService  implements OnDestroy {
       })
     );
   }
+
+
 
   constructor(private http: HttpClient) {}
 
@@ -120,6 +127,8 @@ export class AuthService  implements OnDestroy {
     );
   }
 
+
+
   signup(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
@@ -129,8 +138,10 @@ export class AuthService  implements OnDestroy {
       .pipe(tap(this.setUserData.bind(this)));
   }
 
+
+
   login(email: string, password: string) {
-    // this._userAuthenticated = true;
+    // this._userAuthenticated = true; Uncomment for debugging and Stage
     return this.http
       .post<AuthResponseData>(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`,
@@ -139,17 +150,23 @@ export class AuthService  implements OnDestroy {
       .pipe(tap(this.setUserData.bind(this)));
   }
 
+
+
   logout() {
-    // this._userAuthenticated = false;
+    // this._userAuthenticated = false; Uncomment for debugging and Stage
     this._user.next(null);
-    Preferences.remove({ key: 'authData'});
+    Preferences.remove({ key: 'authData' });
   }
 
+
+
   ngOnDestroy() {
-    if (this.logoutTimer){
+    if (this.logoutTimer) {
       clearTimeout(this.logoutTimer);
     }
   }
+
+
 
   private storingAuthenData(
     userId: string,
@@ -165,4 +182,6 @@ export class AuthService  implements OnDestroy {
     });
     Preferences.set({ key: 'authData', value: data });
   }
+
+
 }

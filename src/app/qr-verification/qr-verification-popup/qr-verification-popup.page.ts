@@ -2,9 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 
-
-
-
 @Component({
   selector: 'app-qr-verification-popup',
   templateUrl: './qr-verification-popup.page.html',

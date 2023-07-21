@@ -1,4 +1,3 @@
-// import { ANALYZE_FOR_ENTRY_COMPONENTS, NgModule } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +22,6 @@ import { CreateQrcodeComponent } from './create-qrcode/create-qrcode.component';
     QRCodeModule,
   ],
   declarations: [QrGeneratorPage, CreateQrcodeComponent],
-  // entryComponents: [CreateQrcodeComponent]
+  
 })
 export class QrGeneratorPageModule {}

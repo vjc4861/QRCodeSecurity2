@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { QrGeneratorService } from '../qr-generator/qr-generator.service';
 import { BarcodeFormat } from '@zxing/library';
 import { AlertController, ModalController } from '@ionic/angular';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
-// import axios from 'axios';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { QrVerificationPopupPage } from './qr-verification-popup/qr-verification-popup.page';
@@ -16,8 +15,9 @@ import { QrVerificationPopupPage } from './qr-verification-popup/qr-verification
   styleUrls: ['./qr-verification.page.scss'],
 })
 export class QrVerificationPage implements OnInit {
+  
 
-  constructor(private modalController: ModalController, private http: HttpClient, private changeDetector: ChangeDetectorRef ,private qrGeneratorService: QrGeneratorService, private alertController: AlertController, private db: AngularFireDatabase) { }
+  constructor(private ngZone: NgZone, private elementRef: ElementRef, private modalController: ModalController, private http: HttpClient, private changeDetector: ChangeDetectorRef ,private qrGeneratorService: QrGeneratorService, private alertController: AlertController, private db: AngularFireDatabase) { }
 
   @ViewChild('scanner', { static: false }) scanner!: ZXingScannerComponent;
 
@@ -28,17 +28,12 @@ export class QrVerificationPage implements OnInit {
   ngOnInit() {
   }
 
-
-  // resumeScan(): void {
-  //   this.scanner.scanStart // Starts the scanner again.
-  // }
-
   async openQrVerificationPopup() {
     const modal = await this.modalController.create({
       component: QrVerificationPopupPage,
       componentProps: {
-        'title': 'QR Verification Title',      // replace these values
-        'lines': ['Line1', 'Line2', 'Line3'],  // with your actual data
+        'title': 'QR Verification Title',      
+        'lines': ['Line1', 'Line2', 'Line3'],  
       },
       backdropDismiss: false
     });
@@ -48,13 +43,24 @@ export class QrVerificationPage implements OnInit {
 
   async continueScanning(): Promise<void> {
     this.isCameraVisible = false;
-    // Use setTimeout to allow Angular to update the template properly
     await Promise.resolve().then(() => {
       this.isCameraVisible = true;
       this.scanner.reset();
       this.scanner.scanStart();
     });
   }
+
+  // async continueScanning(): Promise<void> {
+  //   this.ngZone.run(() => {
+  //     this.isCameraVisible = false;
+  //     setTimeout(() => {
+  //       this.isCameraVisible = true;
+  //       this.scanner.reset();
+  //       this.scanner.scanStart();
+  //     });
+  //   });
+  // }
+  
 
   verifyURLSafety(url: string): Observable<boolean> {
     const apiUrl = 'https://safebrowsing.googleapis.com/v4/threatMatches:find';
@@ -86,14 +92,14 @@ export class QrVerificationPage implements OnInit {
     });
 }
 
-  expandUrl(shortUrl: string): Observable<string> {
-    return this.http.get(shortUrl, {
-      observe: 'response',
-      responseType: 'text'
-    }).pipe(map((response: HttpResponse<string>) => {
-      return response.headers.get('location') || shortUrl;
-    }));
-  }
+  // expandUrl(shortUrl: string): Observable<string> {
+  //   return this.http.get(shortUrl, {
+  //     observe: 'response',
+  //     responseType: 'text'
+  //   }).pipe(map((response: HttpResponse<string>) => {
+  //     return response.headers.get('location') || shortUrl;
+  //   }));
+  // }
 
 
 
@@ -103,6 +109,7 @@ export class QrVerificationPage implements OnInit {
   }
   
   onScanSuccess(data: any) {
+    // this.scanner.enable = false;
     this.scanner.reset();
   
     // Initialise modal variables
@@ -164,6 +171,7 @@ export class QrVerificationPage implements OnInit {
   
           modal.onDidDismiss().then(dataReturned => {
             if (dataReturned !== null) {
+              // this.scanner.enable = true;
               this.continueScanning();
               this.changeDetector.detectChanges();
             }
@@ -174,92 +182,9 @@ export class QrVerificationPage implements OnInit {
       },
       error => {
         console.error('Error verifying URL safety:', error);
-        // Here you could put some error handling logic in case the Google Safe Browsing call fails.
       }
     );
   }
-
-
-
-
 }
-
-
-//
-//Below is the best working onscan method
-// onScanSuccess(data: any) {
-//   this.scanner.reset();
-
-//   // Initialise alert variables
-//   let alertHeader = '';
-//   let alertMessage = '';
-//   let alertSubHeader = '';
-//   let safeMessage = '';
-
-//   this.verifyURLSafety(data).subscribe(
-//     isURLSafe => {
-//       console.log("Safe or not:", isURLSafe);
-
-//       this.db.database.ref('qrcodes').orderByChild('data').equalTo(data).once('value', async snapshot => {
-//         // The URL safety result is being declared here regardless of whether the snapshot exists in the database
-//         let safetyResult = isURLSafe ? '✅ The URL is safe.' : '❌ The URL is unsafe.';
-//         // safeMessage = `${safetyResult}`;
-
-//         if (snapshot.exists()) {
-//           // If found in the database
-//           alertHeader = '✅ Success';
-//           alertSubHeader = `Content: ${data}\nIt is in our database as it was generated with our app!`;
-//           alertMessage = `${safetyResult}`;
-//         } else {
-//           // If not found in the database
-//           alertHeader = '❌ Warning';
-//           alertSubHeader = `Content: ${data}\nIt is not in our database, therefore it was not created using our app!`;
-//           alertMessage = `${safetyResult}`;
-//         }
-
-//         // Show alert message based on the result
-//         const alert = await this.alertController.create({
-//           header: alertHeader,
-//           subHeader: alertSubHeader,
-//           message: alertMessage + safeMessage,
-//           cssClass: 'alert-message',
-          
-//           buttons: [{
-//             text: 'OK',
-//             handler: async () => {
-//               await alert.dismiss();
-//               this.continueScanning();
-//               this.changeDetector.detectChanges();
-//             }
-//           }]
-//         });
-
-//         await alert.present();
-//       });
-//     },
-//     error => {
-//       console.error('Error verifying URL safety:', error);
-//       // Here you could put some error handling logic in case the Google Safe Browsing call fails.
-//     }
-//   );
-// }
-
-  // onScanSuccess(decodedText: string){
-  // this.qrGeneratorService.checkIfQrCodeExists(decodedText).subscribe(isStored => {
-  // // your logic to show checkmark or cross based on isStored value
-  //   let header = isStored ? 'Success' : 'Info';
-  //   let message = isStored ? 'QR code found and valid!' : `QR code not found or invalid. Content: ${decodedText}`;
-  //   this.presentAlert(header, message);
-  // });
-  // }
-
-  // async presentAlert(header: string, message: string) {
-  //   const alert = await this.alertController.create({
-  //     header: header,
-  //     message: message,
-  //     buttons: ['OK']
-  //   });
-  //   await alert.present();
-  // }
 
 

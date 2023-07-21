@@ -3,20 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { QrGeneratorPage } from './qr-generator.page';
 
-// const routes: Routes = [
-//   {
-//     path: '',
-//     component: QrGeneratorPage,
-//     children: [
-//       {
-//         path: ':qrcodeId',
-//         loadChildren: () => import('./qrcode-detail/qrcode-detail.module').then( m => m.QrcodeDetailPageModule)
-//       }
-//     ]
-//   }
-// ]
-
-
 
 const routes: Routes = [
   {

@@ -15,34 +15,34 @@ export class AuthPage implements OnInit {
   isLoading = false;
   isLogin = true;
 
-  constructor(private authService: AuthService, private alertCtrl: AlertController ,private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(private authenService: AuthService, private alertCtrl: AlertController ,private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
   }
 
   onLogin(email: string, password: string) {
     this.isLoading = true;
-    // this.authService.login();
+    // this.authenService.login();
     this.loadingCtrl.create({keyboardClose: true, message: 'Logging in....'}).then(loadingEl => {
       loadingEl.present();
-      let authObserve: Observable<AuthResponseData>;
+      let authenObserve: Observable<AuthResponseData>;
       if (this.isLogin) {
-        authObserve = this.authService.login(email, password);
+        authenObserve = this.authenService.login(email, password);
       } else {
-        authObserve = this.authService.signup(email, password);
+        authenObserve = this.authenService.signup(email, password);
       }
       // send a request to signup servers
-      authObserve.subscribe(
+      authenObserve.subscribe(
         (responseData) => {
         console.log(responseData);
         console.log('User ID:', responseData.localId);
         this.isLoading = false;
         loadingEl.dismiss();
         this.router.navigateByUrl('/profile')
-      }, respondedError => {
+      }, errorToResponded => {
             this.isLoading = false;
             loadingEl.dismiss();
-            const code = respondedError.error.error.message;
+            const code = errorToResponded.error.error.message;
             let message = 'Unsuccessful registration, please try again!';
             if (code === 'EMAIL_EXISTS'){
               message = 'This email address already exists!';
@@ -51,14 +51,14 @@ export class AuthPage implements OnInit {
             } else if (code === 'INVALID_PASSWORD') {
               message = 'Invalid email address / password. Please try again!';
             }
-            this.displayAlert(message);
+            this.Alert_Display(message);
       });
     });
 
 
   }
 
-  onChangeAuthMode(){
+  authenModeChange(){
     this.isLogin = !this.isLogin
   }
 
@@ -74,7 +74,7 @@ export class AuthPage implements OnInit {
     form.reset();
   }
 
-  private displayAlert(message: string){
+  private Alert_Display(message: string){
     console.log('Displaying alert with message:', message);
     this.alertCtrl.create({ header: 'Login Failed', message: message, buttons: ['Okay']}).then(alertElement => alertElement.present());
 
