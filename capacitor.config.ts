@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'QR-Code-Security',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'http'
   }
   // "server": {
   //   "url": "http://YOUR_COMPUTER_IP_ADDRESS:8100"
